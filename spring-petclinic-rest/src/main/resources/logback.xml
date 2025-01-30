@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+    
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--
+        <encoder>
+            <pattern>%-5level %logger{0} - %msg%n</pattern>
+        </encoder>
+        -->
+        <encoder class="co.elastic.logging.logback.EcsEncoder">
+            <serviceName>spring-petclinic</serviceName>
+        </encoder>
+    </appender>
+    <appender name="json-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="co.elastic.logging.logback.EcsEncoder">
+            <serviceName>my-application</serviceName>
+        </encoder>
+        <file>/var/log/demo/petclinic.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.json.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-10MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-0}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!--<logger name="org.hibernate" level="debug"/> -->
+    <logger name="org.springframework.samples.petclinic" level="debug"/>
+
+    <root level="debug">
+        <appender-ref ref="console"/>
+        <appender-ref ref="json-file"/>
+    </root>
+</configuration>

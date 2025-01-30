@@ -1,0 +1,7 @@
+FROM node:18
+
+RUN export NG_CLI_ANALYTICS=false
+# RUN npm -g config set proxy "http://xxx.xxx.xxx.xxx:xxxx/"
+# RUN npm -g config set https-proxy "http://xxx.xxx.xxx.xxx:xxxx/"
+RUN npm -g config set noproxy localhost
+RUN npm install -g @angular/cli@16.2.0
