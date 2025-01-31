@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  apprest:
+    image: openjdk:11-slim
+    ports:
+      - 9966:9966
+    volumes:
+      - ../spring-petclinic-rest:/app
+      - ./log:/var/log/demo
+    working_dir: /app
+    command: ./mvnw spring-boot:run
+    networks:
+      - demo_default
+  appangular:
+    build:
+      context: .
+      dockerfile: Dockerfile_angular
+    ports:
+      - 4200:4200
+    volumes:
+      - ../spring-petclinic-angular:/app
+    working_dir: /app
+    command: bash -c "npm link && ng serve --host=0.0.0.0"
+    networks:
+      - demo_default
+
+  locust:
+    build:
+      context: ../loadtests-locust
+      dockerfile: Dockerfile
+    ports:
+      - 8089:8089
+    volumes:
+      - ../loadtests-locust:/mnt/locust
+    working_dir: /mnt/locust
+    command: bash -c "sleep 180 && locust -f locust_petclinic_test.py --host=http://localhost:9966 -u 10 -r 2 --run-time 5m"
+    networks:
+      - demo_default
+    depends_on:
+      - apprest
+
+networks:
+  demo_default:
+    external: true

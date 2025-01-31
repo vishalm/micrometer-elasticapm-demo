@@ -53,6 +53,12 @@ cd ../demo
 docker-compose -f docker-compose-application.yml up -d
 ```
 
+## Run Application with load tests
+```
+cd ../demo
+docker compose -f docker-compose-app-load-test.yml up
+```
+
 # Stop Elastic Stack and Applicaions
 
 ## Stop applications.
@@ -88,3 +94,5 @@ docker-compose -f docker-compose-application.yml down
 ```
 docker-compose -f docker-compose-elastic.yml down
 ```
+
+
